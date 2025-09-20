@@ -1,7 +1,7 @@
 package project.annotations;
 
 public class PowerDigitSumController implements ComputeControllerAPI {
-
+/* prototype of of Compute logic Does not compile
     @Override
     public ComputeResponse compute(ComputeRequest request) {
         try {
@@ -41,3 +41,4 @@ public class PowerDigitSumController implements ComputeControllerAPI {
         }
     }
 }
+*/
