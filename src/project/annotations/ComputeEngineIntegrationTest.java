@@ -18,6 +18,7 @@ public class ComputeEngineIntegrationTest {
         StorageResponse inResp = store.insertRequest(new StorageRequest("2 15".getBytes()));
 
         assertEquals(StoreStatus.SUCCESS, inResp.getStatus());
+        assertNotNull(inResp.getId());
 
         String loadedInput = new String(store.loadData(inResp.getId()));
         assertEquals("2 15", loadedInput);
