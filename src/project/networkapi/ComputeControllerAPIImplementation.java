@@ -1,4 +1,4 @@
-package project.annotations;
+package project.networkapi;
 
 public class ComputeControllerAPIImplementation implements ComputeControllerAPI {
     @Override

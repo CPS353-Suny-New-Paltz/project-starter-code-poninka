@@ -1,12 +1,12 @@
-package project.annotations;
-
-import java.util.ArrayList;
-import java.util.List;
+package project.processapi;
 
 import project.annotations.DataStoreComputeAPI;
 import project.annotations.StorageRequest;
 import project.annotations.StorageResponse;
 import project.annotations.StoreStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataStoreInMemory implements DataStoreComputeAPI {
     private List<byte[]> userInputs = new ArrayList<>();

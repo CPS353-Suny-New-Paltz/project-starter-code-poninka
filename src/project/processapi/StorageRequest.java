@@ -1,4 +1,4 @@
-package project.annotations;
+package project.processapi;
 
 public class StorageRequest {
     private byte[] data;

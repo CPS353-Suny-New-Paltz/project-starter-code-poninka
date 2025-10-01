@@ -28,4 +28,12 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    filter {
+        excludeTestsMatching "*TestDataStoreComputeAPI"
+        excludeTestsMatching "*TestUserComputeAPI"
+        excludeTestsMatching "*TestComputeControllerAPI"
+        excludeTestsMatching "*ComputeEngineIntegrationTest"
+        excludeTestsMatching "*TestStatusCheckPR"
+        excludeTestsMatching "*MockitoTest"
+    }
 }

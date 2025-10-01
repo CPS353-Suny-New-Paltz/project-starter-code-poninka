@@ -1,4 +1,4 @@
-package project.annotations;
+package project.processapi;
 
 public class StorageResponse {
     private String id;

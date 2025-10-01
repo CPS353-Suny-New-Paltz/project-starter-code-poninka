@@ -1,4 +1,4 @@
-package project.annotations;
+package project.processapi;
 
 public class DataStoreComputeAPIImplementation implements DataStoreComputeAPI {
     @Override

@@ -1,4 +1,4 @@
-package project.annotations;
+package project.conceptualapi;
 
 public class PowerDigitSumController implements ComputeControllerAPI {
 

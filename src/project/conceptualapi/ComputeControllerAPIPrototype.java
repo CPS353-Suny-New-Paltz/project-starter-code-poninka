@@ -1,4 +1,5 @@
-package project.annotations;
+package project.conceptualapi;
+import project.annotations.ConceptualAPIPrototype;
 
 public class ComputeControllerAPIPrototype {
 

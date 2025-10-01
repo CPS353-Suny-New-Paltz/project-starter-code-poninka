@@ -1,4 +1,4 @@
-package project.annotations;
+package project.emptyimplementations;
 
 public class UserComputeAPIImplementation implements UserComputeAPI {
     @Override
