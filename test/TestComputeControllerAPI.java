@@ -2,6 +2,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import project.conceptualapi.ComputeControllerAPI;
+import project.conceptualapi.ComputeRequest;
+import project.conceptualapi.ComputeResponse;
+import project.conceptualapi.ComputeStatus;
+
 public class TestComputeControllerAPI {
     @Test
     public void testPowerDigitSum() {

@@ -2,10 +2,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 
-import project.annotations.StorageRequest;
-import project.annotations.StorageResponse;
-import project.annotations.StoreStatus;
-import project.annotations.DataStoreInMemory;
+import project.processapi.StorageRequest;
+import project.processapi.StorageResponse;
+import project.processapi.StoreStatus;
+import project.processapi.DataStoreInMemory;
 
 public class ComputeEngineIntegrationTest {
     @Test
