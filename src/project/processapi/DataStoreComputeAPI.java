@@ -1,5 +1,8 @@
 package project.processapi;
 
+import project.annotations.ProcessAPI;
+
+@ProcessAPI
 public interface DataStoreComputeAPI {
     StorageResponse insertRequest(StorageRequest request);
     byte[] loadData(String id);

@@ -1,9 +1,9 @@
 package project.processapi;
 
-import project.annotations.DataStoreComputeAPI;
-import project.annotations.StorageRequest;
-import project.annotations.StorageResponse;
-import project.annotations.StoreStatus;
+import project.processapi.DataStoreComputeAPI;
+import project.processapi.StorageRequest;
+import project.processapi.StorageResponse;
+import project.processapi.StoreStatus;
 
 import java.util.ArrayList;
 import java.util.List;

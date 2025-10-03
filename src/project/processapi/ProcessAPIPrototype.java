@@ -1,9 +1,8 @@
 package project.processapi;
 import project.annotations.ProcessAPIPrototype;
-import project.processapi.ProcessAPI;
 
 public class ProcessAPIPrototype {
     @ProcessAPIPrototype
-    public void prototype(ProcessAPI api) {
+    public void prototype(DataStoreComputeAPI api) { // Changed parameter to DataStoreComputeAPI
     }
 }

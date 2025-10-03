@@ -6,7 +6,8 @@ eclipse.project.name = 'FillThisIn'
 sourceSets {
 	main {
 	  java {
-		srcDirs = ['src']
+          srcDirs = ['src']
+          exclude 'project/emptyimplementations/**'
 	  }
 	}
 	test {
@@ -34,6 +35,5 @@ test {
         excludeTestsMatching "*TestComputeControllerAPI"
         excludeTestsMatching "*ComputeEngineIntegrationTest"
         excludeTestsMatching "*TestStatusCheckPR"
-        excludeTestsMatching "*MockitoTest"
     }
 }
