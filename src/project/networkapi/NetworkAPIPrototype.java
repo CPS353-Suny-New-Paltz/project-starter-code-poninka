@@ -1,5 +1,4 @@
 package project.networkapi;
-import  project.annotations.NetworkAPIPrototype;
 
 public class NetworkAPIPrototype {
     @NetworkAPIPrototype
