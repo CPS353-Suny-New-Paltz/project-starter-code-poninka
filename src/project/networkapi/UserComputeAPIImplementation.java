@@ -1,4 +1,4 @@
-package project.emptyimplementations;
+package project.networkapi;
 
 public class UserComputeAPIImplementation implements UserComputeAPI {
     @Override

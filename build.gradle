@@ -29,6 +29,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    // failOnNoTests = false // Cheat if build doesn't work again
     filter {
         excludeTestsMatching "*TestDataStoreComputeAPI"
         excludeTestsMatching "*TestUserComputeAPI"
