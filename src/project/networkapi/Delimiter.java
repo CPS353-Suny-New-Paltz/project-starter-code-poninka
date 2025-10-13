@@ -1,6 +1,13 @@
 package project.networkapi;
 
 public class Delimiter {
-    public Delimiter(String pair, String keyValue) {
+    private final char value;
+
+    public Delimiter(char value) {
+        this.value = value;
+    }
+
+    public char getValue() {
+        return value;
     }
 }

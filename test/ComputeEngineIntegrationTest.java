@@ -12,22 +12,22 @@ public class ComputeEngineIntegrationTest {
     public void testInMemoryDataStore() {
         DataStoreInMemory store = new DataStoreInMemory();
 
-        // Simulate user submitting "2^15"
-        StorageResponse inResp = store.insertRequest(new StorageRequest("2 15".getBytes()));
+        // Simulate user submitting 1,10,25
+        StorageResponse inResp = store.insertRequest(new StorageRequest("1,10,25".getBytes()));
 
         assertEquals(StoreStatus.SUCCESS, inResp.getStatus());
         assertNotNull(inResp.getId());
 
         String loadedInput = new String(store.loadData(inResp.getId()));
-        assertEquals("2 15", loadedInput);
+        assertEquals("1,10,25", loadedInput);
 
-        // Simulate engine computing digit sum = 26
-        StorageResponse outResp = store.insertResult(new StorageRequest("26".getBytes()));
+        // Simulate engine computing digit sums
+        StorageResponse outResp = store.insertResult(new StorageRequest("1,1,7".getBytes()));
 
         assertEquals(StoreStatus.SUCCESS, outResp.getStatus());
         assertNotNull(outResp.getId());
 
         String loadedResult = new String(store.loadResult(outResp.getId()));
-        assertEquals("26", loadedResult);
+        assertEquals("1,1,7", loadedResult);
     }
 }

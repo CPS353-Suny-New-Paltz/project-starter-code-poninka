@@ -1,23 +1,13 @@
 package project.processapi;
 
-public class DataStoreComputeAPIImplementation implements DataStoreComputeAPI {
-    @Override
-    public StorageResponse insertRequest(StorageRequest request) {
-        return new StorageResponse(null, StoreStatus.FAILURE_WRITE_ERROR);
-    }
+import project.annotations.ProcessAPI;
+import java.util.List;
 
-    @Override
-    public byte[] loadData(String id) {
-        return null;
-    }
+@ProcessAPI
+public interface DataStoreComputeAPIImplementation {
+    // Load the list of integers
+    List<Integer> loadInput();
 
-    @Override
-    public StorageResponse insertResult(StorageRequest request) {
-        return new StorageResponse(null, StoreStatus.FAILURE_WRITE_ERROR);
-    }
-
-    @Override
-    public byte[] loadResult(String id) {
-        return null;
-    }
+    // Method to save the final list
+    void saveOutput(List<String> results);
 }
