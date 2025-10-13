@@ -1,10 +1,5 @@
 package project.processapi;
 
-import project.processapi.DataStoreComputeAPI;
-import project.processapi.StorageRequest;
-import project.processapi.StorageResponse;
-import project.processapi.StoreStatus;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,5 +45,15 @@ public class DataStoreInMemory implements DataStoreComputeAPI {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public List<Integer> loadInput() {
+        return List.of();
+    }
+
+    @Override
+    public void saveOutput(List<String> results) {
+
     }
 }

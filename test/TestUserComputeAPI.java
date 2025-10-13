@@ -17,11 +17,10 @@ public class TestUserComputeAPI {
         UserSubmission sub = new UserSubmission(
                 new InputSource("file", "input.txt"),
                 new OutputSource("stdout"),
-                new Delimiter(";", ":")
+                new Delimiter(';')
         );
 
-        Mockito.when(mocksub.submit(sub))
-                .thenReturn(new UserSubResponse("sub-1", SubmissionStatus.SUCCESS));
+        Mockito.when(mocksub.submit(sub)).thenReturn(new UserSubResponse("sub-1", SubmissionStatus.SUCCESS));
 
         UserSubResponse resp = mocksub.submit(sub);
         assertEquals(SubmissionStatus.SUCCESS, resp.getStatus());
