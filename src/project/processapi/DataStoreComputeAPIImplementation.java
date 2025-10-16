@@ -3,7 +3,6 @@ package project.processapi;
 import project.annotations.ProcessAPI;
 import java.util.List;
 
-@ProcessAPI
 public interface DataStoreComputeAPIImplementation {
     // Load the list of integers
     List<Integer> loadInput();
