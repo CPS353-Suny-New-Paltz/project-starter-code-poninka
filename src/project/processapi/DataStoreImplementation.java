@@ -7,7 +7,7 @@ public class DataStoreImplementation implements DataStoreComputeAPI {
 
     // TODO: create logic for loading and saving data
 
-    public DataStoreImplementation(String inputSource, String outputSource) {
+    public DataStoreImplementation() {
     }
 
     @Override

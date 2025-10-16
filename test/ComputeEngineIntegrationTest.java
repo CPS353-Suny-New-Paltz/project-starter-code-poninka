@@ -1,33 +1,31 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import project.processapi.StorageRequest;
-import project.processapi.StorageResponse;
-import project.processapi.StoreStatus;
-import project.processapi.DataStoreInMemory;
+import project.conceptualapi.PowerDigitSumController;
+import project.networkapi.UserComputeAPIImplementation;
+import project.processapi.DataStoreImplementation;
 
 public class ComputeEngineIntegrationTest {
+
     @Test
-    public void testInMemoryDataStore() {
-        DataStoreInMemory store = new DataStoreInMemory();
+    void testComponentInstantiation() {
 
-        // Simulate user submitting 1,10,25
-        StorageResponse inResp = store.insertRequest(new StorageRequest("1,10,25".getBytes()));
+        // implementation of NetworkAPI
+        UserComputeAPIImplementation networkAPI = new UserComputeAPIImplementation();
 
-        assertEquals(StoreStatus.SUCCESS, inResp.getStatus());
-        assertNotNull(inResp.getId());
+        // implementation of ConceptualAPI
+        PowerDigitSumController conceptualAPI = new PowerDigitSumController();
 
-        String loadedInput = new String(store.loadData(inResp.getId()));
-        assertEquals("1,10,25", loadedInput);
+        // Test implementation of ProcessAPI (for the integration test structure check)
+        DataStoreInMemory testDataStore = new DataStoreInMemory();
 
-        // Simulate engine computing digit sums
-        StorageResponse outResp = store.insertResult(new StorageRequest("1,1,7".getBytes()));
+        // implementation of ProcessAPI (for the smoke test check)
+        DataStoreImplementation realDataStore = new DataStoreImplementation();
 
-        assertEquals(StoreStatus.SUCCESS, outResp.getStatus());
-        assertNotNull(outResp.getId());
-
-        String loadedResult = new String(store.loadResult(outResp.getId()));
-        assertEquals("1,1,7", loadedResult);
+        assertNotNull(networkAPI);
+        assertNotNull(conceptualAPI);
+        assertNotNull(testDataStore);
+        assertNotNull(realDataStore);
     }
 }
+

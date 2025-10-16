@@ -1,8 +1,8 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import project.conceptualapi.ComputeControllerAPI;
+import project.conceptualapi.PowerDigitSumController;
 import project.conceptualapi.ComputeRequest;
 import project.conceptualapi.ComputeResponse;
 import project.conceptualapi.ComputeStatus;
@@ -10,13 +10,15 @@ import project.conceptualapi.ComputeStatus;
 public class TestComputeControllerAPI {
     @Test
     public void testPowerDigitSum() {
-        ComputeControllerAPI mockcomp = Mockito.mock(ComputeControllerAPI.class);
-        ComputeRequest req = new ComputeRequest(2, 15); // 2^15 = 32768 sum = 26
+        // Instantiate the implementation
+        ComputeControllerAPI comp = new PowerDigitSumController();
+        ComputeRequest req = new ComputeRequest(2, 15); // 2^15 = 32768, sum = 26
 
-        Mockito.when(mockcomp.compute(req))
-                .thenReturn(new ComputeResponse("26", ComputeStatus.SUCCESS));
+        // Call the method on the real object
+        ComputeResponse resp = comp.compute(req);
 
-        ComputeResponse resp = mockcomp.compute(req);
+        // Assert the results
+        assertEquals(ComputeStatus.SUCCESS, resp.getStatus());
         assertEquals("26", resp.getResult());
     }
 }

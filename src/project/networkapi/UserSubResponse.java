@@ -1,12 +1,20 @@
 package project.networkapi;
 
 public class UserSubResponse {
-    public UserSubResponse(String id, SubmissionStatus status) {
+
+    private final String subId;
+    private final SubmissionStatus status;
+
+    public UserSubResponse(String subId, SubmissionStatus status) {
+        this.subId = subId;
+        this.status = status;
     }
-    public SubmissionStatus getStatus() {
-        return null;
-    }
+
     public String getSubId() {
-        return null;
+        return subId;
+    }
+
+    public SubmissionStatus getStatus() {
+        return status;
     }
 }
