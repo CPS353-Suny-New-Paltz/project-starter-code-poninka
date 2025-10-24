@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import project.conceptualapi.PowerDigitSumController;
 import project.networkapi.UserComputeAPIImplementation;
 import project.processapi.DataStoreImplementation;
+import project.processapi.DataStoreInMemory;
 
 public class ComputeEngineIntegrationTest {
 

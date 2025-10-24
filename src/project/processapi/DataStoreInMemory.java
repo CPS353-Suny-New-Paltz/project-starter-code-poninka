@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataStoreInMemory implements DataStoreComputeAPI {
-    private List<byte[]> userInputs = new ArrayList<>();
-    private List<byte[]> results = new ArrayList<>();
+    // FIX: Made fields final, as they are initialized once and never reassigned.
+    private final List<byte[]> userInputs = new ArrayList<>();
+    private final List<byte[]> results = new ArrayList<>();
 
     @Override
     public StorageResponse insertRequest(StorageRequest request) {
@@ -17,7 +18,6 @@ public class DataStoreInMemory implements DataStoreComputeAPI {
         return new StorageResponse("input-" + index, StoreStatus.SUCCESS);
     }
 
-    @Override
     public byte[] loadData(String id) {
         try {
             int index = Integer.parseInt(id.replace("input-", ""));
@@ -37,7 +37,6 @@ public class DataStoreInMemory implements DataStoreComputeAPI {
         return new StorageResponse("result-" + index, StoreStatus.SUCCESS);
     }
 
-    @Override
     public byte[] loadResult(String id) {
         try {
             int index = Integer.parseInt(id.replace("result-", ""));
@@ -53,7 +52,8 @@ public class DataStoreInMemory implements DataStoreComputeAPI {
     }
 
     @Override
-    public void saveOutput(List<String> results) {
-
+    public StorageResponse saveOutput(List<String> results) {
+        // Returning a SUCCESS response for now
+        return new StorageResponse(null, StoreStatus.SUCCESS);
     }
 }

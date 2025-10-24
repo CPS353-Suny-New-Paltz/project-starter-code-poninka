@@ -1,62 +1,36 @@
-import project.processapi.DataStoreComputeAPI;
-import project.processapi.StorageRequest;
-import project.processapi.StorageResponse;
-import project.processapi.StoreStatus;
+package project.processapi;
 
-import java.util.ArrayList;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.List;
 
-public class DataStoreInMemory implements DataStoreComputeAPI {
-    private List<byte[]> userInputs = new ArrayList<>();
-    private List<byte[]> results = new ArrayList<>();
+class TestDataStoreComputeAPI {
 
-    @Override
-    public StorageResponse insertRequest(StorageRequest request) {
-        if (request == null || request.getData() == null) {
-            return new StorageResponse(null, StoreStatus.FAILURE_WRITE_ERROR);
-        }
-        int index = userInputs.size();
-        userInputs.add(request.getData());
-        return new StorageResponse("input-" + index, StoreStatus.SUCCESS);
+    @Test
+    void testInsertAndLoadRequest() {
+        DataStoreInMemory dataStore = new DataStoreInMemory();
+
+        byte[] testData = "simple test".getBytes();
+        StorageRequest request = new StorageRequest(testData);
+
+        //Test the insertRequest method
+        StorageResponse response = dataStore.insertRequest(request);
+
+        assertEquals(StoreStatus.SUCCESS, response.getStatus());
+        assertNotNull(response.getId());
+
+        //Test the loadData method
+        byte[] loadedData = dataStore.loadData(response.getId());
+        assertArrayEquals(testData, loadedData); // Check if data loaded
     }
 
-    @Override
-    public byte[] loadData(String id) {
-        try {
-            int index = Integer.parseInt(id.replace("input-", ""));
-            return userInputs.get(index);
-        } catch (Exception e) {
-            return null;
-        }
-    }
+    @Test
+    void testSaveOutputReturnsSuccess() {
+        // Test the saveOutput
+        DataStoreComputeAPI dataStore = new DataStoreInMemory();
+        StorageResponse response = dataStore.saveOutput(List.of("result"));
 
-    @Override
-    public StorageResponse insertResult(StorageRequest request) {
-        if (request == null || request.getData() == null) {
-            return new StorageResponse(null, StoreStatus.FAILURE_WRITE_ERROR);
-        }
-        int index = results.size();
-        results.add(request.getData());
-        return new StorageResponse("result-" + index, StoreStatus.SUCCESS);
-    }
-
-    @Override
-    public byte[] loadResult(String id) {
-        try {
-            int index = Integer.parseInt(id.replace("result-", ""));
-            return results.get(index);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    @Override
-    public List<Integer> loadInput() {
-        return List.of();
-    }
-
-    @Override
-    public void saveOutput(List<String> results) {
-
+        assertEquals(StoreStatus.SUCCESS, response.getStatus());
     }
 }
