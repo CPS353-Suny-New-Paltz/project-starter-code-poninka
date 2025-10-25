@@ -5,10 +5,6 @@ import java.util.List;
 
 @ProcessAPI
 public interface DataStoreComputeAPI {
-    StorageResponse insertRequest(StorageRequest request);
-    StorageResponse insertResult(StorageRequest request);
-
-    List<Integer> loadInput();
-
-    StorageResponse saveOutput(List<String> results);
+    List<Integer> loadInput(String inputPath, String delimiter);
+    StorageResponse saveOutput(String outputPath, String resultContent);
 }

@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataStoreImplementation implements DataStoreComputeAPI {
+public class TestDataStore implements DataStoreComputeAPI {
 
     @Override
     public List<Integer> loadInput(String inputPath, String delimiter) {
@@ -21,7 +21,6 @@ public class DataStoreImplementation implements DataStoreComputeAPI {
             }
             return values;
         } catch (Exception e) {
-            // On error return empty list
             return List.of();
         }
     }

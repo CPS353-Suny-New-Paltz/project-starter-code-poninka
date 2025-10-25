@@ -1,14 +1,7 @@
+package project.networkapi;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-
-import project.networkapi.UserComputeAPI;
-import project.networkapi.UserComputeAPIImplementation;
-import project.networkapi.UserSubmission;
-import project.networkapi.InputSource;
-import project.networkapi.OutputSource;
-import project.networkapi.Delimiter;
-import project.networkapi.UserSubResponse;
-import project.networkapi.SubmissionStatus;
 
 public class TestUserComputeAPI {
     @Test
