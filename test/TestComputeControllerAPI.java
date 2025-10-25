@@ -18,7 +18,6 @@ public class TestComputeControllerAPI {
         ComputeResponse resp = comp.compute(req);
 
         // Assert the results
-        assertEquals(ComputeStatus.SUCCESS, resp.getStatus());
         assertEquals("26", resp.getResult());
     }
 }

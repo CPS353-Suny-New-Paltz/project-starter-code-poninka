@@ -10,4 +10,8 @@ public class Delimiter {
     public char getValue() {
         return value;
     }
+
+    public String getDelimiter() {
+        return String.valueOf(value);
+    }
 }
