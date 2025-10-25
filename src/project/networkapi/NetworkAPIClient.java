@@ -5,7 +5,7 @@ import project.annotations.NetworkAPIPrototype;
 public class NetworkAPIClient {
     @NetworkAPIPrototype
     public void prototype(UserComputeAPI api) {
-        // Simple prototype usage: construct a submission and call submit
+        // construct a submission and call submit
         InputSource input = new InputSource("file", "input.txt");
         OutputSource output = new OutputSource("output.txt");
         Delimiter delimiter = new Delimiter(',');
