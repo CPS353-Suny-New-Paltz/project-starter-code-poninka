@@ -10,11 +10,6 @@ public class ComputeRequest {
         this.exponent = exponent;
     }
 
-    public ComputeRequest(int n) {
-        this.base = n;
-        this.exponent = n;
-    }
-
     public int getBase() {
         return base;
     }

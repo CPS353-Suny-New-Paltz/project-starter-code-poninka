@@ -1,38 +1,42 @@
 package project.processapi;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DataStoreImplementation implements DataStoreComputeAPI {
 
-    @Override
-    public List<Integer> loadInput(String inputPath, String delimiter) {
-        try {
-            String content = Files.readString(Path.of(inputPath));
-            String[] parts = content.split(delimiter);
-            List<Integer> values = new ArrayList<>();
-            for (String p : parts) {
-                String trimmed = p.trim();
-                if (!trimmed.isEmpty()) {
-                    values.add(Integer.parseInt(trimmed));
-                }
-            }
-            return values;
-        } catch (Exception e) {
-            // On error return empty list
-            return List.of();
-        }
+    // TODO: create logic for loading and saving data
+
+    public DataStoreImplementation() {
     }
 
     @Override
-    public StorageResponse saveOutput(String outputPath, String resultContent) {
-        try {
-            Files.writeString(Path.of(outputPath), resultContent);
-            return new StorageResponse(outputPath, StoreStatus.SUCCESS);
-        } catch (Exception e) {
-            return new StorageResponse(outputPath, StoreStatus.FAILURE_WRITE_ERROR);
-        }
+    public StorageResponse insertRequest(StorageRequest request) {
+        return null;
+    }
+
+    @Override
+    public byte[] loadData(String id) {
+        return null;
+    }
+
+    @Override
+    public StorageResponse insertResult(StorageRequest request) {
+        return null;
+    }
+
+    @Override
+    public byte[] loadResult(String id) {
+        return null;
+    }
+
+
+    @Override
+    public List<Integer> loadInput() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void saveOutput(List<String> results) {
     }
 }
