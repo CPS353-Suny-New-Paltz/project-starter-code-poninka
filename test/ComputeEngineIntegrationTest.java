@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import project.conceptualapi.PowerDigitSumController;
 import project.networkapi.UserComputeAPIImplementation;
 import project.processapi.DataStoreImplementation;
-import project.processapi.TestDataStore;
 
 public class ComputeEngineIntegrationTest {
 
@@ -17,8 +16,8 @@ public class ComputeEngineIntegrationTest {
         // implementation of ConceptualAPI
         PowerDigitSumController conceptualAPI = new PowerDigitSumController();
 
-        // Test implementation of ProcessAPI
-        TestDataStore testDataStore = new TestDataStore();
+        // Test implementation of ProcessAPI (for the integration test structure check)
+        DataStoreInMemory testDataStore = new DataStoreInMemory();
 
         // implementation of ProcessAPI (for the smoke test check)
         DataStoreImplementation realDataStore = new DataStoreImplementation();
