@@ -10,7 +10,15 @@ public class DataStoreImplementation implements DataStoreComputeAPI {
     @Override
     public List<Integer> loadInput(String inputPath, String delimiter) {
         try {
-            String content = Files.readString(Path.of(inputPath));
+            if (inputPath == null || inputPath.isBlank() || delimiter == null || delimiter.isEmpty()) {
+                return List.of();
+            }
+            Path path = Path.of(inputPath);
+            if (!Files.exists(path) || !Files.isReadable(path)) {
+                return List.of();
+            }
+
+            String content = Files.readString(path);
             String[] parts = content.split(delimiter);
             List<Integer> values = new ArrayList<>();
             for (String p : parts) {
@@ -29,6 +37,9 @@ public class DataStoreImplementation implements DataStoreComputeAPI {
     @Override
     public StorageResponse saveOutput(String outputPath, String resultContent) {
         try {
+            if (outputPath == null || outputPath.isBlank() || resultContent == null) {
+                return new StorageResponse(outputPath, StoreStatus.FAILURE_WRITE_ERROR);
+            }
             Files.writeString(Path.of(outputPath), resultContent);
             return new StorageResponse(outputPath, StoreStatus.SUCCESS);
         } catch (Exception e) {
