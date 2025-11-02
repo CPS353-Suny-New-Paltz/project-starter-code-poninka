@@ -12,7 +12,7 @@ import project.processapi.StoreStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserComputeAPIImplementation implements UserComputeAPI {
+public class UserComputeAPIImplementation implements UserComputeAPI, ComputeControllerAPI {
 
     private final DataStoreComputeAPI dataStore;
     private final ComputeControllerAPI computeEngine;
@@ -58,6 +58,11 @@ public class UserComputeAPIImplementation implements UserComputeAPI {
     public SubmissionStatus getStatus(String id) {
         // Any id value is accepted for now
         return (id != null) ? SubmissionStatus.SUCCESS : SubmissionStatus.FAILURE_SYSTEM_ERROR;
+    }
+
+    @Override
+    public ComputeResponse compute(ComputeRequest request) {
+        return computeEngine.compute(request);
     }
 
     // Executes the full submission, returns true on success false otherwise
