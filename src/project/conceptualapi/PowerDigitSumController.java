@@ -1,5 +1,7 @@
 package project.conceptualapi;
 
+import java.math.BigInteger;
+
 public class PowerDigitSumController implements ComputeControllerAPI {
 
     @Override
@@ -20,7 +22,7 @@ public class PowerDigitSumController implements ComputeControllerAPI {
                 );
             }
 
-            long power = pow(base, exponent);
+            BigInteger power = pow(base, exponent);
             int sum = digitSum(power);
 
             // Return + successful response
@@ -42,17 +44,14 @@ public class PowerDigitSumController implements ComputeControllerAPI {
         }
     }
 
-    private long pow(int base, int exponent) {
-        long result = 1;
-        for (int i = 0; i < exponent; i++) {
-            result *= base;
-        }
-        return result;
+    private BigInteger pow(int base, int exponent) {
+        // Use BigInteger.pow to avoid overflow and ensure correctness for large exponents
+        return BigInteger.valueOf(base).pow(exponent);
     }
 
-    private int digitSum(long value) {
+    private int digitSum(BigInteger value) {
         int sum = 0;
-        String str = Long.toString(value);
+        String str = value.toString();
         for (char c : str.toCharArray()) {
             sum += (c - '0');
         }
