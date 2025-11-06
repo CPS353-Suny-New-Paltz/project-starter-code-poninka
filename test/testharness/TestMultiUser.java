@@ -1,4 +1,4 @@
-package testHarness;
+package testharness;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,9 +32,9 @@ public class TestMultiUser {
     @Test
     public void compareMultiAndSingleThreaded() throws Exception {
         int nThreads = 4;
-        List<testHarness.TestUser> testUsers = new ArrayList<>();
+        List<testharness.TestUser> testUsers = new ArrayList<>();
         for (int i = 0; i < nThreads; i++) {
-            testUsers.add(new testHarness.TestUser(coordinator));
+            testUsers.add(new testharness.TestUser(coordinator));
         }
 
         // Run single threaded
@@ -55,7 +55,7 @@ public class TestMultiUser {
                     new File(multiThreadFilePrefix + i);
             multiThreadedOut.deleteOnExit();
             String multiThreadOutputPath = multiThreadedOut.getCanonicalPath();
-            testHarness.TestUser testUser = testUsers.get(i);
+            testharness.TestUser testUser = testUsers.get(i);
             results.add(threadPool.submit(() -> testUser.run(multiThreadOutputPath)));
         }
 
