@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import project.conceptualapi.PowerDigitSumController;
 import project.networkapi.UserComputeAPI;
-import project.networkapi.UserComputeAPIImplementation;
+import project.networkapi.UserComputeAPIMultiThreaded;
 import project.processapi.DataStoreImplementation;
 
 public class TestMultiUser {
@@ -26,7 +26,7 @@ public class TestMultiUser {
     public void initializeComputeEngine() {
         //2: create an instance of the implementation of @NetworkAPI
         // Store it in the 'coordinator' variable
-        coordinator = new UserComputeAPIImplementation(new DataStoreImplementation(), new PowerDigitSumController());
+        coordinator = new UserComputeAPIMultiThreaded(new DataStoreImplementation(), new PowerDigitSumController());
     }
 
     @Test
