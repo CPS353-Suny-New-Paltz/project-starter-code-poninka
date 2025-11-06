@@ -67,32 +67,6 @@ public class UserComputeAPIImplementation implements UserComputeAPI, ComputeCont
 
     // Executes the full submission, returns true on success false otherwise
     private boolean execute(UserSubmission submission) {
-        try {
-            if (submission == null || submission.getInput() == null || submission.getOutput() == null || submission.getDelimiter() == null) {
-                return false;
-            }
-            String inputPath = submission.getInput().getSourceName();
-            String outputPath = submission.getOutput().getSourceName();
-            String delimiter = submission.getDelimiter().getDelimiter();
-
-            // Load integers from data storage
-            List<Integer> intInputs = dataStore.loadInput(inputPath, delimiter);
-            if (intInputs.isEmpty()) {
-                return false;
-            }
-
-            // Compute results put as a single line
-            List<String> results = new ArrayList<>(intInputs.size());
-            for (int n : intInputs) {
-                ComputeRequest request = new ComputeRequest(n); // n^n digit sum
-                ComputeResponse response = computeEngine.compute(request);
-                results.add(response.getResult());
-            }
-            String outputString = String.join(",", results);
-            StorageResponse saved = dataStore.saveOutput(outputPath, outputString);
-            return saved != null && saved.getStatus() == StoreStatus.SUCCESS;
-        } catch (Exception e) {
-            return false;
-        }
+        return SubmissionExecutor.executeSequential(dataStore, computeEngine, submission);
     }
 }

@@ -45,7 +45,7 @@ public class PowerDigitSumController implements ComputeControllerAPI {
     }
 
     private BigInteger pow(int base, int exponent) {
-        // Use BigInteger.pow to avoid overflow and ensure correctness for large exponents
+        // Use BigInteger.pow to avoid overflow
         return BigInteger.valueOf(base).pow(exponent);
     }
 
