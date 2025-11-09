@@ -5,6 +5,7 @@ option java_package = "project.networkapi.grpc";
 option java_outer_classname = "NetworkApiProto";
 
 package project.networkapi.grpc;
+
 message SubmitRequest {
   string input_type = 1;
   string input_value = 2;

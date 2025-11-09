@@ -6,7 +6,7 @@ public class OutputSource {
     public OutputSource(String destination) {
         this.destination = destination;
     }
-
+    
     public String getSourceName() {
         return destination;
     }
