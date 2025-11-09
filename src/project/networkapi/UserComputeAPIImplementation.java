@@ -1,18 +1,11 @@
 package project.networkapi;
 
 import project.conceptualapi.ComputeControllerAPI;
-import project.conceptualapi.ComputeRequest;
-import project.conceptualapi.ComputeResponse;
 import project.conceptualapi.PowerDigitSumController;
 import project.processapi.DataStoreComputeAPI;
 import project.processapi.DataStoreImplementation;
-import project.processapi.StorageResponse;
-import project.processapi.StoreStatus;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class UserComputeAPIImplementation implements UserComputeAPI, ComputeControllerAPI {
+public class UserComputeAPIImplementation implements UserComputeAPI {
 
     private final DataStoreComputeAPI dataStore;
     private final ComputeControllerAPI computeEngine;
@@ -58,11 +51,6 @@ public class UserComputeAPIImplementation implements UserComputeAPI, ComputeCont
     public SubmissionStatus getStatus(String id) {
         // Any id value is accepted for now
         return (id != null) ? SubmissionStatus.SUCCESS : SubmissionStatus.FAILURE_SYSTEM_ERROR;
-    }
-
-    @Override
-    public ComputeResponse compute(ComputeRequest request) {
-        return computeEngine.compute(request);
     }
 
     // Executes the full submission, returns true on success false otherwise

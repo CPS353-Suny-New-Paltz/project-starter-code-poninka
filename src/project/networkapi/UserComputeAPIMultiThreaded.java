@@ -1,12 +1,10 @@
 package project.networkapi;
 
 import project.conceptualapi.ComputeControllerAPI;
-import project.conceptualapi.ComputeRequest;
-import project.conceptualapi.ComputeResponse;
 import project.processapi.DataStoreComputeAPI;
 
 // uses SubmissionExecutor for computations
-public class UserComputeAPIMultiThreaded implements UserComputeAPI, ComputeControllerAPI {
+public class UserComputeAPIMultiThreaded implements UserComputeAPI {
 
     // Upper limit of threads
     public static final int MAX_THREADS = 8;
@@ -48,9 +46,4 @@ public class UserComputeAPIMultiThreaded implements UserComputeAPI, ComputeContr
         }
     }
 
-    // single thread (old)
-    @Override
-    public ComputeResponse compute(ComputeRequest request) {
-        return computeEngine.compute(request);
-    }
 }
