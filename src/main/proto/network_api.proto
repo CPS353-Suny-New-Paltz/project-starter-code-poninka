@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "project.networkapi.grpc";
+option java_outer_classname = "NetworkApiProto";
+
+package project.networkapi.grpc;
+message SubmitRequest {
+  string input_type = 1;
+  string input_value = 2;
+  string output_destination = 3;
+  string delimiter = 4;
+}
+
+message SubmitResponse {
+  string submission_id = 1;
+  string status = 2;
+  string message = 3;
+}
+
+service NetworkSubmissionService {
+  rpc Submit (SubmitRequest) returns (SubmitResponse);
+}
