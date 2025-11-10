@@ -61,3 +61,38 @@ test {
     filter {
     }
 }
+
+tasks.named('compileJava').configure {
+    dependsOn 'generateProto'
+}
+
+tasks.register('runProcessDataStore', JavaExec) {
+    group = 'application'
+    description = 'Runs the Process API gRPC server'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'project.processapi.ProcessDataStoreServer'
+    if (project.hasProperty('argsLine')) {
+        args project.property('argsLine').split(' ')
+    }
+}
+
+tasks.register('runNetworkServer', JavaExec) {
+    group = 'application'
+    description = 'Runs the Network API gRPC server'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'project.networkapi.grpc.NetworkApiGrpcServer'
+    if (project.hasProperty('argsLine')) {
+        args project.property('argsLine').split(' ')
+    }
+}
+
+tasks.register('runConsoleClient', JavaExec) {
+    group = 'application'
+    description = 'Runs the console client frontend'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'project.networkapi.grpc.NetworkSubmissionConsoleClient'
+    standardInput = System.in
+    if (project.hasProperty('argsLine')) {
+        args project.property('argsLine').split(' ')
+    }
+}
