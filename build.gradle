@@ -1,14 +1,18 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
-
-eclipse.project.name = 'FillThisIn' 
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'com.google.protobuf' version '0.9.4'
+}
 
 sourceSets {
 	main {
 	  java {
-          srcDirs = ['src']
+          srcDirs = ['src', 'build/generated/source/proto/main/java', 'build/generated/source/proto/main/grpc']
           exclude 'project/emptyimplementations/**'
 	  }
+      proto {
+          srcDirs = ['src/main/proto']
+      }
 	}
 	test {
 	  java {
@@ -22,15 +26,73 @@ repositories {
 }
 
 dependencies {
+    implementation 'io.grpc:grpc-netty-shaded:1.64.0'
+    implementation 'io.grpc:grpc-protobuf:1.64.0'
+    implementation 'io.grpc:grpc-stub:1.64.0'
+    implementation 'com.google.protobuf:protobuf-java:3.25.3'
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
     testImplementation('org.junit.jupiter:junit-jupiter:5.10.2')
 	testImplementation('org.mockito:mockito-core:5.10.0')
 	implementation('com.google.code.gson:gson:2.13.1')
     implementation 'fr.inria.gforge.spoon:spoon-core:11.2.0'
 }
 
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.25.3'
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.64.0'
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                grpc { }
+            }
+        }
+    }
+}
+
 test {
     useJUnitPlatform()
     // enabled = false // Cheat to build if all filters are excluded
     filter {
+    }
+}
+
+tasks.named('compileJava').configure {
+    dependsOn 'generateProto'
+}
+
+tasks.register('runProcessDataStore', JavaExec) {
+    group = 'application'
+    description = 'Runs the Process API gRPC server'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'project.processapi.ProcessDataStoreServer'
+    if (project.hasProperty('argsLine')) {
+        args project.property('argsLine').split(' ')
+    }
+}
+
+tasks.register('runNetworkServer', JavaExec) {
+    group = 'application'
+    description = 'Runs the Network API gRPC server'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'project.networkapi.grpc.NetworkApiGrpcServer'
+    if (project.hasProperty('argsLine')) {
+        args project.property('argsLine').split(' ')
+    }
+}
+
+tasks.register('runConsoleClient', JavaExec) {
+    group = 'application'
+    description = 'Runs the console client frontend'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'project.networkapi.grpc.NetworkSubmissionConsoleClient'
+    standardInput = System.in
+    if (project.hasProperty('argsLine')) {
+        args project.property('argsLine').split(' ')
     }
 }
