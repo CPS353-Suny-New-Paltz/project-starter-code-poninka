@@ -5,8 +5,10 @@ import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import project.conceptualapi.PowerDigitSumController;
 import project.networkapi.UserComputeAPI;
 import project.networkapi.UserComputeAPIImplementation;
+import project.processapi.RemoteDataStoreClient;
 
 public class NetworkApiGrpcServer {
 
@@ -49,12 +51,10 @@ public class NetworkApiGrpcServer {
 
     // Manual testing
     public static void main(String[] args) throws IOException, InterruptedException {
-        // Default port
         int port = args.length > 0 ? Integer.parseInt(args[0]) : 50051;
-
-        // Use single-threaded implementation
-        UserComputeAPI coordinator = new UserComputeAPIImplementation();
-
+        String dataStoreTarget = args.length > 1 ? args[1] : "localhost:60051";
+        RemoteDataStoreClient remoteStore = new RemoteDataStoreClient(dataStoreTarget);
+        UserComputeAPI coordinator = new UserComputeAPIImplementation(remoteStore, new PowerDigitSumController());
         NetworkApiGrpcServer grpcServer = new NetworkApiGrpcServer(port, coordinator);
         grpcServer.start();
         grpcServer.blockUntilShutdown();

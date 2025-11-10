@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "project.processapi";
+option java_outer_classname = "ProcessDataStoreProto";
+
+package project.processapi;
+
+message LoadInputRequest {
+  string input_path = 1;
+  string delimiter = 2;
+}
+
+message LoadInputResponse {
+  repeated int32 values = 1;
+}
+
+message SaveOutputRequest {
+  string output_path = 1;
+  string content = 2;
+}
+
+message SaveOutputResponse {
+  string id = 1;
+  string status = 2;
+}
+
+service DataStoreService {
+  rpc LoadInput(LoadInputRequest) returns (LoadInputResponse);
+  rpc SaveOutput(SaveOutputRequest) returns (SaveOutputResponse);
+}
