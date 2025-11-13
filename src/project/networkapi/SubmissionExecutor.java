@@ -24,42 +24,19 @@ final class SubmissionExecutor {
     static boolean executeSequential(DataStoreComputeAPI dataStore, ComputeControllerAPI computeEngine, UserSubmission submission) {
 
         try {
-            // null validation
-            if (!isValid(submission)) {
-                return false;
-            }
-
-            // Extract parameters
-            String inputPath = submission.getInput().getSourceName();
-            String outputPath = submission.getOutput().getSourceName();
-            String delimiter = submission.getDelimiter().getDelimiter();
-
-            // Load list from the file
-            List<Integer> intInputs = dataStore.loadInput(inputPath, delimiter);
-            if (intInputs == null || intInputs.isEmpty()) {
+            SubmissionContext context = prepareSubmission(dataStore, submission);
+            if (context == null) {
                 return false;
             }
 
             List<String> results = new ArrayList<>();
 
             // Compute one by one (n^n digit sum)
-            for (int n : intInputs) {
-                // request object
-                ComputeRequest request = new ComputeRequest(n);
-                ComputeResponse response = computeEngine.compute(request);
-
-                // Collect result will look something like: "5,4,27"
-                if (response != null && response.getResult() != null) {
-                    results.add(response.getResult());
-                } else {
-                    results.add("ERROR"); // will look something like: "5,ERROR,27"
-                }
+            for (int n : context.intInputs) {
+                results.add(computeResult(computeEngine, n));
             }
 
-            String outputString = String.join(",", results);
-            // Save output
-            StorageResponse saved = dataStore.saveOutput(outputPath, outputString);
-            return saved != null && saved.getStatus() == StoreStatus.SUCCESS;
+            return saveResults(dataStore, context.outputPath, results);
 
         } catch (Exception e) {
             return false;
@@ -72,18 +49,8 @@ final class SubmissionExecutor {
         ExecutorService pool = null;
 
         try {
-            if (!isValid(submission)) {
-                return false;
-            }
-
-            // Extract core parameters
-            String inputPath = submission.getInput().getSourceName();
-            String outputPath = submission.getOutput().getSourceName();
-            String delimiter = submission.getDelimiter().getDelimiter();
-
-            // Load integer
-            List<Integer> intInputs = dataStore.loadInput(inputPath, delimiter);
-            if (intInputs == null || intInputs.isEmpty()) {
+            SubmissionContext context = prepareSubmission(dataStore, submission);
+            if (context == null) {
                 return false;
             }
 
@@ -92,18 +59,12 @@ final class SubmissionExecutor {
             List<Future<String>> futures = new ArrayList<>();
 
             // Submit each job as a Callable
-            for (int n : intInputs) {
+            for (int n : context.intInputs) {
                 Callable<String> task = new Callable<String>() {
                     @Override
                     public String call() {
                         try {
-                            ComputeRequest request = new ComputeRequest(n);
-                            ComputeResponse response = computeEngine.compute(request);
-                            if (response != null && response.getResult() != null) {
-                                return response.getResult();
-                            } else {
-                                return "ERROR";
-                            }
+                            return computeResult(computeEngine, n);
                         } catch (Exception e) {
                             // Return ERROR if any thread fails
                             return "ERROR";
@@ -123,10 +84,7 @@ final class SubmissionExecutor {
                 }
             }
 
-            String outputString = String.join(",", results);
-            // Save output
-            StorageResponse saved = dataStore.saveOutput(outputPath, outputString);
-            return saved != null && saved.getStatus() == StoreStatus.SUCCESS;
+            return saveResults(dataStore, context.outputPath, results);
 
         } catch (Exception e) {
             return false;
@@ -143,5 +101,53 @@ final class SubmissionExecutor {
                 && submission.getInput() != null
                 && submission.getOutput() != null
                 && submission.getDelimiter() != null;
+    }
+
+    private static SubmissionContext prepareSubmission(DataStoreComputeAPI dataStore, UserSubmission submission) {
+        if (!isValid(submission)) {
+            return null;
+        }
+
+        // Extract parameters
+        String inputPath = submission.getInput().getSourceName();
+        String outputPath = submission.getOutput().getSourceName();
+        String delimiter = submission.getDelimiter().getDelimiter();
+
+        // Load list from the file
+        List<Integer> intInputs = dataStore.loadInput(inputPath, delimiter);
+        if (intInputs == null || intInputs.isEmpty()) {
+            return null;
+        }
+
+        return new SubmissionContext(intInputs, outputPath);
+    }
+
+    private static String computeResult(ComputeControllerAPI computeEngine, int n) {
+        // request object
+        ComputeRequest request = new ComputeRequest(n);
+        ComputeResponse response = computeEngine.compute(request);
+
+        // Collect result will look something like: "5,4,27"
+        if (response != null && response.getResult() != null) {
+            return response.getResult();
+        }
+        return "ERROR"; // will look something like: "5,ERROR,27"
+    }
+
+    private static boolean saveResults(DataStoreComputeAPI dataStore, String outputPath, List<String> results) {
+        String outputString = String.join(",", results);
+        // Save output
+        StorageResponse saved = dataStore.saveOutput(outputPath, outputString);
+        return saved != null && saved.getStatus() == StoreStatus.SUCCESS;
+    }
+
+    private static final class SubmissionContext {
+        private final List<Integer> intInputs;
+        private final String outputPath;
+
+        private SubmissionContext(List<Integer> intInputs, String outputPath) {
+            this.intInputs = intInputs;
+            this.outputPath = outputPath;
+        }
     }
 }
