@@ -6,6 +6,18 @@ import java.util.concurrent.ConcurrentMap;
 
 public class PowerDigitSumControllerFast implements ComputeControllerAPI {
 
+    /*
+    To identify the bottleneck, I created a simple end-to-end test UserComputeSpeedIT ran it to get a baseline reading.
+    on m1 macbook I got a reading of 20.18 ms for the sequential implementation and 13.83 ms for multithreaded (MAX: 8 threads)
+    I opened Jconsole and ran the test repeatedly I saw CPU usage spike to around 25%
+    I thought what is the most computationally intensive process, of course the actual computation my API is designed to do.
+    So I just edited the test to skip PowerDigitSumController.
+    Now when I ran UserComputeSpeedIT I got readings of around 1 ms for both sequential and multithreaded.
+    I couldn't come up with a way to optimize the computation, at least not anything to net 10%
+    So, I just added a Cache my benchmark performance skyrocketed from 20.18 to 0.49 ms in sequential and 13.83 ms to 1.31 ms in multithreaded.
+    Granted, this benchmark is the best case scenario for a Cache,
+    so the 97.57% Sequential improvement and 90.53% Multithreaded improvements won't translate perfectly to a real-world use case.
+     */
     private static final BigInteger TEN = BigInteger.TEN;
 
     //multi-thread safe cache

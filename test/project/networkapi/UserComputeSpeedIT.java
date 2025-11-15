@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import project.conceptualapi.ComputeControllerAPI;
 import project.conceptualapi.PowerDigitSumController;
+import project.conceptualapi.PowerDigitSumControllerFast;
 import project.networkapi.Delimiter;
 import project.networkapi.InputSource;
 import project.networkapi.OutputSource;
@@ -36,30 +37,41 @@ public class UserComputeSpeedIT {
         UserSubmission submission = new UserSubmission(new InputSource("file", input.toString()), new OutputSource(output.toString()), new Delimiter(','));
 
         DataStoreComputeAPI dataStore = new DataStoreImplementation();
-        ComputeControllerAPI computeEngine = new PowerDigitSumController();
-        UserComputeAPI sequential = new UserComputeAPIImplementation(dataStore, computeEngine);
-        UserComputeAPI concurrent = new UserComputeAPIParallel(dataStore, computeEngine);
+        ComputeControllerAPI slowEngine = new PowerDigitSumController();
+        ComputeControllerAPI fastEngine = new PowerDigitSumControllerFast();
+        UserComputeAPI sequential = new UserComputeAPIImplementation(dataStore, slowEngine);
+        UserComputeAPI sequentialFast = new UserComputeAPIImplementation(dataStore, fastEngine);
+        UserComputeAPI multiThreaded = new UserComputeAPIMultiThreaded(dataStore, slowEngine);
+        UserComputeAPI multiThreadedFast = new UserComputeAPIMultiThreaded(dataStore, fastEngine);
 
         sequential.submit(submission);
-        concurrent.submit(submission);
+        sequentialFast.submit(submission);
+        multiThreaded.submit(submission);
+        multiThreadedFast.submit(submission);
 
         int runs = 5;
-        long seqAggregate = 0L;
-        long concAggregate = 0L;
         for (int i = 1; i <= runs; i++) {
             long seqStart = System.nanoTime();
             sequential.submit(submission);
             long seqElapsed = System.nanoTime() - seqStart;
-            seqAggregate += seqElapsed;
 
-            long concStart = System.nanoTime();
-            concurrent.submit(submission);
-            long concElapsed = System.nanoTime() - concStart;
-            concAggregate += concElapsed;
+            long seqFastStart = System.nanoTime();
+            sequentialFast.submit(submission);
+            long seqFastElapsed = System.nanoTime() - seqFastStart;
+
+            long multiStart = System.nanoTime();
+            multiThreaded.submit(submission);
+            long multiElapsed = System.nanoTime() - multiStart;
+
+            long multiFastStart = System.nanoTime();
+            multiThreadedFast.submit(submission);
+            long multiFastElapsed = System.nanoTime() - multiFastStart;
 
             double seqMs = seqElapsed / 1_000_000.0;
-            double concMs = concElapsed / 1_000_000.0;
-            System.out.printf("run %d = sequential: %.2f ms, concurrent: %.2f ms%n", i, seqMs, concMs);
+            double seqFastMs = seqFastElapsed / 1_000_000.0;
+            double multiMs = multiElapsed / 1_000_000.0;
+            double multiFastMs = multiFastElapsed / 1_000_000.0;
+            System.out.printf("run %d = seq: %.2f ms, seq-fast: %.2f ms, multi: %.2f ms, multi-fast: %.2f ms%n", i, seqMs, seqFastMs, multiMs, multiFastMs);
         }
     }
 }
