@@ -15,15 +15,18 @@ public class NetworkSubmissionConsoleClient {
         String target = args.length > 0 ? args[0] : "localhost:50051";
         Scanner scanner = new Scanner(System.in);
 
-        // Ask for input file path
-        System.out.print("Enter file path to input file: ");
-        String inputPath = scanner.nextLine().trim();
+        System.out.print("Enter input type (file/memory): ");
+        String inputType = scanner.nextLine().trim();
 
-        // Ask for output file path
+        System.out.print("Enter input value: ");
+        String inputValue = scanner.nextLine().trim();
+
         System.out.print("Enter output file destination: ");
         String outputPath = scanner.nextLine().trim();
 
-        String delimiter = ",";
+        System.out.print("Enter delimiter (press enter for default ','): ");
+        String delimiterInput = scanner.nextLine().trim();
+        String delimiter = delimiterInput.isEmpty() ? "," : delimiterInput;
 
         // connection to gRPC server
         ManagedChannel channel = Grpc.newChannelBuilder(target, InsecureChannelCredentials.create()).build();
@@ -32,10 +35,9 @@ public class NetworkSubmissionConsoleClient {
             // blocking client stub
             NetworkSubmissionServiceGrpc.NetworkSubmissionServiceBlockingStub stub = NetworkSubmissionServiceGrpc.newBlockingStub(channel);
 
-            // Build for the request
             SubmitRequest request = SubmitRequest.newBuilder()
-                    .setInputType("file")
-                    .setInputValue(inputPath)
+                    .setInputType(inputType)
+                    .setInputValue(inputValue)
                     .setOutputDestination(outputPath)
                     .setDelimiter(delimiter)
                     .build();
