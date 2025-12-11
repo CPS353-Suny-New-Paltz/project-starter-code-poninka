@@ -1,12 +1,41 @@
-# Ignore Gradle project-specific cache directory
-.gradle
+# Gradle
+.gradle/
+**/build/
+build/
 
-# Ignore Gradle build output directory
-build
+# IDE stuff every stupid I open IDE open this project with make like 20 file
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse
 .classpath
 .project
-.settings
-bin
+.settings/
+
+.vscode/
+
+# Android Studios
+local.properties
+/captures/
+.externalNativeBuild/
+.cxx/
+# Show Compiled APK
+!power-digit-sum-android-app/app/build/intermediates/apk/debug/app-debug.apk
+
+bin/
 *.class
+
+# Logs
+*.log
+build_error*.txt
+
+# MacOS
 .DS_Store
-/.idea
+
+# txt files for texting
+TestOutput.txt
+output_memory.txt
+output_result.txt
+network.log
