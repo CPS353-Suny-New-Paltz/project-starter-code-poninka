@@ -33,9 +33,4 @@ build_error*.txt
 
 # MacOS
 .DS_Store
-
-# txt files for texting
-TestOutput.txt
-output_memory.txt
-output_result.txt
-network.log
+/.idea

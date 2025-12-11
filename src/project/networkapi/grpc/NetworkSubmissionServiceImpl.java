@@ -24,13 +24,12 @@ public class NetworkSubmissionServiceImpl extends NetworkSubmissionServiceGrpc.N
             UserSubmission submission = new UserSubmission(
                     new InputSource(request.getInputType(), request.getInputValue()),
                     new OutputSource(request.getOutputDestination()),
-                    new Delimiter(resolveDelimiter(request.getDelimiter())));
+                    new Delimiter(resolveDelimiter(request.getDelimiter()))
+            );
             UserSubResponse result = coordinator.submit(submission);
             response = SubmitResponse.newBuilder()
                     .setSubmissionId(result.getSubId() == null ? "" : result.getSubId())
-                    .setStatus(result.getStatus().name())
-                    .setMessage(result.getResult() == null ? "" : result.getResult())
-                    .build();
+                    .setStatus(result.getStatus().name()).build();
         } catch (Exception e) {
             response = SubmitResponse.newBuilder().setSubmissionId("")
                     .setStatus(SubmissionStatus.FAILURE_SYSTEM_ERROR.name())

@@ -96,10 +96,3 @@ tasks.register('runConsoleClient', JavaExec) {
         args project.property('argsLine').split(' ')
     }
 }
-
-tasks.register('buildAndroidApp', Exec) {
-    group = 'application'
-    description = 'Runs the Android app build with its own gradle'
-    workingDir = 'power-digit-sum-android-app'
-    commandLine './gradlew', 'assembleDebug'
-}

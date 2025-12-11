@@ -15,19 +15,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
  // Sequential = single-thread
- // Concurrent = uses a thread pool with an upper bound (set to 8 in UserComputeAPIMultiThreaded)
+ // Concurrent = uses thread pool with an upper bound (set to 8 in UserComputeAPIMultiThreaded)
 final class SubmissionExecutor {
 
     private SubmissionExecutor() {}
 
-    // Sequential returns result string and now null on failure
-    static String executeSequential(DataStoreComputeAPI dataStore, ComputeControllerAPI computeEngine,
-            UserSubmission submission) {
+     // Sequential returns true if all steps complete successfully
+    static boolean executeSequential(DataStoreComputeAPI dataStore, ComputeControllerAPI computeEngine, UserSubmission submission) {
 
         try {
             SubmissionContext context = prepareSubmission(dataStore, submission);
             if (context == null) {
-                return null;
+                return false;
             }
 
             List<String> results = new ArrayList<>();
@@ -37,12 +36,10 @@ final class SubmissionExecutor {
                 results.add(computeResult(computeEngine, n));
             }
 
-            String resultString = String.join(context.delimiter, results);
-            boolean saved = saveResults(dataStore, context.outputPath, results, context.delimiter);
-            return saved ? resultString : null;
+            return saveResults(dataStore, context.outputPath, results);
 
         } catch (Exception e) {
-            return null;
+            return false;
         }
     }
 
@@ -87,7 +84,7 @@ final class SubmissionExecutor {
                 }
             }
 
-            return saveResults(dataStore, context.outputPath, results, context.delimiter);
+            return saveResults(dataStore, context.outputPath, results);
 
         } catch (Exception e) {
             return false;
@@ -113,42 +110,16 @@ final class SubmissionExecutor {
 
         // Extract parameters
         String inputPath = submission.getInput().getSourceName();
-        String inputType = submission.getInput().getType();
         String outputPath = submission.getOutput().getSourceName();
         String delimiter = submission.getDelimiter().getDelimiter();
 
-        List<Integer> intInputs;
-        if ("memory".equalsIgnoreCase(inputType)) {
-            // Parse directly
-            intInputs = parseInput(inputPath);
-        } else {
-            // Load list and ignore delimiter for input parsing
-            intInputs = dataStore.loadInput(inputPath, ",");
-        }
+        // Load list from the file
+        List<Integer> intInputs = dataStore.loadInput(inputPath, delimiter);
         if (intInputs == null || intInputs.isEmpty()) {
             return null;
         }
 
-        return new SubmissionContext(intInputs, outputPath, delimiter);
-    }
-
-    private static List<Integer> parseInput(String content) {
-        if (content == null || content.isBlank()) {
-            return new ArrayList<>();
-        }
-        String[] parts = content.split("[,\\s]+");
-        List<Integer> values = new ArrayList<>();
-        for (String p : parts) {
-            String trimmed = p.trim();
-            if (!trimmed.isEmpty()) {
-                try {
-                    values.add(Integer.parseInt(trimmed));
-                } catch (NumberFormatException e) {
-                    // ignore invalid inputs
-                }
-            }
-        }
-        return values;
+        return new SubmissionContext(intInputs, outputPath);
     }
 
     private static String computeResult(ComputeControllerAPI computeEngine, int n) {
@@ -163,8 +134,8 @@ final class SubmissionExecutor {
         return "ERROR"; // will look something like: "5,ERROR,27"
     }
 
-    private static boolean saveResults(DataStoreComputeAPI dataStore, String outputPath, List<String> results, String delimiter) {
-        String outputString = String.join(delimiter, results);
+    private static boolean saveResults(DataStoreComputeAPI dataStore, String outputPath, List<String> results) {
+        String outputString = String.join(",", results);
         // Save output
         StorageResponse saved = dataStore.saveOutput(outputPath, outputString);
         return saved != null && saved.getStatus() == StoreStatus.SUCCESS;
@@ -173,12 +144,10 @@ final class SubmissionExecutor {
     private static final class SubmissionContext {
         private final List<Integer> intInputs;
         private final String outputPath;
-        private final String delimiter;
 
-        private SubmissionContext(List<Integer> intInputs, String outputPath, String delimiter) {
+        private SubmissionContext(List<Integer> intInputs, String outputPath) {
             this.intInputs = intInputs;
             this.outputPath = outputPath;
-            this.delimiter = delimiter;
         }
     }
 }

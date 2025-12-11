@@ -54,8 +54,8 @@ public class UserComputeAPIImplementation implements UserComputeAPI {
         return (id != null) ? SubmissionStatus.SUCCESS : SubmissionStatus.FAILURE_SYSTEM_ERROR;
     }
 
-    // Executes the full submission, returns result string or null on failure
-    private String execute(UserSubmission submission) {
+    // Executes the full submission, returns true on success false otherwise
+    private boolean execute(UserSubmission submission) {
         return SubmissionExecutor.executeSequential(dataStore, computeEngine, submission);
     }
 }
