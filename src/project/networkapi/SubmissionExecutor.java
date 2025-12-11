@@ -20,7 +20,7 @@ final class SubmissionExecutor {
 
     private SubmissionExecutor() {}
 
-    // Sequential returns result string and now null on failure
+    // Sequential returns the result string and now null on failure
     static String executeSequential(DataStoreComputeAPI dataStore, ComputeControllerAPI computeEngine,
             UserSubmission submission) {
 
@@ -123,7 +123,7 @@ final class SubmissionExecutor {
             intInputs = parseInput(inputPath);
         } else {
             // Load list and ignore delimiter for input parsing
-            intInputs = dataStore.loadInput(inputPath, ",");
+            intInputs = dataStore.loadInput(inputPath, "[,;\\\\s]+");
         }
         if (intInputs == null || intInputs.isEmpty()) {
             return null;
