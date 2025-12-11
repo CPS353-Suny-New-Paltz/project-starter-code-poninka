@@ -1,28 +1,40 @@
 package project.conceptualapi;
 
 import java.math.BigInteger;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class PowerDigitSumControllerFast implements ComputeControllerAPI {
 
     /*
-    To identify the bottleneck, I created a simple end-to-end test UserComputeSpeedIT ran it to get a baseline reading.
-    on m1 macbook I got a reading of 20.18 ms for the sequential implementation and 13.83 ms for multithreaded (MAX: 8 threads)
-    I opened Jconsole and ran the test repeatedly I saw CPU usage spike to around 25%
-    I thought what is the most computationally intensive process, of course the actual computation my API is designed to do.
-    So I just edited the test to skip PowerDigitSumController.
-    Now when I ran UserComputeSpeedIT I got readings of around 1 ms for both sequential and multithreaded.
-    I couldn't come up with a way to optimize the computation, at least not anything to net 10%
-    So, I just added a Cache my benchmark performance skyrocketed from 20.18 to 0.49 ms in sequential and 13.83 ms to 1.31 ms in multithreaded.
-    Granted, this benchmark is the best case scenario for a Cache,
-    so the 97.57% Sequential improvement and 90.53% Multithreaded improvements won't translate perfectly to a real-world use case.
+     * To identify the bottleneck, I created a simple end-to-end test
+     * UserComputeSpeedIT ran it to get a baseline reading.
+     * on m1 macbook I got a reading of 20.18 ms for the sequential implementation
+     * and 13.83 ms for multithreaded (MAX: 8 threads)
+     * I opened Jconsole and ran the test repeatedly I saw CPU usage spike to around
+     * 25%
+     * I thought what is the most computationally intensive process, of course the
+     * actual computation my API is designed to do.
+     * So I just edited the test to skip PowerDigitSumController.
+     * Now when I ran UserComputeSpeedIT I got readings of around 1 ms for both
+     * sequential and multithreaded.
+     * I couldn't come up with a way to optimize the computation, at least not
+     * anything to net 10%
+     * So, I just added a Cache my benchmark performance skyrocketed from 20.18 to
+     * 0.49 ms in sequential and 13.83 ms to 1.31 ms in multithreaded.
+     * Granted, this benchmark is the best case scenario for a Cache,
+     * so the 97.57% Sequential improvement and 90.53% Multithreaded improvements
+     * won't translate perfectly to a real-world use case.
      */
     private static final BigInteger TEN = BigInteger.TEN;
 
-    //multi-thread safe cache
-    //ConcurrentMap = "base:exponent"
-    private final ConcurrentMap<String, String> cache = new ConcurrentHashMap<>();
+    // LRU Cache with max size
+    private static final int MAX_CACHE_SIZE = 100;
+    private final java.util.Map<String, String> cache = java.util.Collections.synchronizedMap(
+            new java.util.LinkedHashMap<String, String>(MAX_CACHE_SIZE, 0.75f, true) {
+                @Override
+                protected boolean removeEldestEntry(java.util.Map.Entry<String, String> eldest) {
+                    return size() > MAX_CACHE_SIZE;
+                }
+            });
 
     @Override
     public ComputeResponse compute(ComputeRequest request) {
@@ -38,11 +50,10 @@ public class PowerDigitSumControllerFast implements ComputeControllerAPI {
             if (!isPositive(base) || !isPositive(exponent)) {
                 return new ComputeResponse(
                         "Invalid input: base and exponent are not positive.",
-                        ComputeStatus.FAIL
-                );
+                        ComputeStatus.FAIL);
             }
 
-            //Check in cache
+            // Check in cache
             String key = cacheKey(base, exponent);
             String cached = cache.get(key);
             if (cached != null) {
@@ -54,7 +65,7 @@ public class PowerDigitSumControllerFast implements ComputeControllerAPI {
             int sum = digitSum(power);
             String result = String.valueOf(sum);
 
-            //store result in the cache
+            // store result in the cache
             cache.putIfAbsent(key, result);
 
             return new ComputeResponse(result, ComputeStatus.SUCCESS);
@@ -62,10 +73,10 @@ public class PowerDigitSumControllerFast implements ComputeControllerAPI {
         } catch (Exception e) {
             return new ComputeResponse(
                     "Error during computation: " + e.getMessage(),
-                    ComputeStatus.ERROR
-            );
+                    ComputeStatus.ERROR);
         }
     }
+
     private boolean isPositive(int value) {
         if (value > 0) {
             return true;
@@ -74,7 +85,7 @@ public class PowerDigitSumControllerFast implements ComputeControllerAPI {
         }
     }
 
-    //format for cacheKey
+    // format for cacheKey
     private String cacheKey(int base, int exponent) {
         return base + ":" + exponent;
     }
