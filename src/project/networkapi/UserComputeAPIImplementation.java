@@ -39,10 +39,11 @@ public class UserComputeAPIImplementation implements UserComputeAPI {
             }
             if (noOpMode) {
                 //report success without requiring files
-                return new UserSubResponse("sub-1", SubmissionStatus.SUCCESS);
+                return new UserSubResponse("sub-1", SubmissionStatus.SUCCESS, "noOp");
             }
-            boolean ok = execute(submission);
-            return new UserSubResponse(ok ? "sub-1" : null, ok ? SubmissionStatus.SUCCESS : SubmissionStatus.FAILURE_SYSTEM_ERROR);
+            String result = execute(submission);
+            boolean ok = result != null;
+            return new UserSubResponse(ok ? "sub-1" : null, ok ? SubmissionStatus.SUCCESS : SubmissionStatus.FAILURE_SYSTEM_ERROR, result);
         } catch (Exception e) {
             return new UserSubResponse(null, SubmissionStatus.FAILURE_SYSTEM_ERROR);
         }
@@ -53,8 +54,8 @@ public class UserComputeAPIImplementation implements UserComputeAPI {
         return (id != null) ? SubmissionStatus.SUCCESS : SubmissionStatus.FAILURE_SYSTEM_ERROR;
     }
 
-    // Executes the full submission, returns true on success false otherwise
-    private boolean execute(UserSubmission submission) {
+    // Executes the full submission, returns result string or null on failure
+    private String execute(UserSubmission submission) {
         return SubmissionExecutor.executeSequential(dataStore, computeEngine, submission);
     }
 }
