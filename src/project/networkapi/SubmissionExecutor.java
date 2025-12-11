@@ -21,7 +21,7 @@ final class SubmissionExecutor {
     private SubmissionExecutor() {
     }
 
-    // Sequential returns result string and now null on failure
+    // Sequential returns the result string and now null on failure
     static String executeSequential(DataStoreComputeAPI dataStore, ComputeControllerAPI computeEngine,
             UserSubmission submission) {
 
