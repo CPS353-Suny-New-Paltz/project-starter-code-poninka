@@ -15,20 +15,20 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 // Sequential = single-thread
-// Concurrent = uses thread pool with an upper bound (set to 8 in UserComputeAPIMultiThreaded)
+// Concurrent = uses a thread pool with an upper bound (set to 8 in UserComputeAPIMultiThreaded)
 final class SubmissionExecutor {
 
     private SubmissionExecutor() {
     }
 
-    // Sequential returns true if all steps complete successfully
-    static boolean executeSequential(DataStoreComputeAPI dataStore, ComputeControllerAPI computeEngine,
+    // Sequential returns the result string and now null on failure
+    static String executeSequential(DataStoreComputeAPI dataStore, ComputeControllerAPI computeEngine,
             UserSubmission submission) {
 
         try {
             SubmissionContext context = prepareSubmission(dataStore, submission);
             if (context == null) {
-                return false;
+                return null;
             }
 
             List<String> results = new ArrayList<>();
@@ -38,10 +38,12 @@ final class SubmissionExecutor {
                 results.add(computeResult(computeEngine, n));
             }
 
-            return saveResults(dataStore, context.outputPath, results, context.delimiter);
+            String resultString = String.join(context.delimiter, results);
+            boolean saved = saveResults(dataStore, context.outputPath, results, context.delimiter);
+            return saved ? resultString : null;
 
         } catch (Exception e) {
-            return false;
+            return null;
         }
     }
 
@@ -119,11 +121,10 @@ final class SubmissionExecutor {
 
         List<Integer> intInputs;
         if ("memory".equalsIgnoreCase(inputType)) {
-            // Parse directly from inputPath (which holds the value)
+            // Parse directly
             intInputs = parseInput(inputPath);
         } else {
-            // Load list from the file
-            // flexible delimite
+            // Load list using flexible delimiter for input parsing
             intInputs = dataStore.loadInput(inputPath, "[,;\\s]+");
         }
         if (intInputs == null || intInputs.isEmpty()) {
@@ -145,7 +146,7 @@ final class SubmissionExecutor {
                 try {
                     values.add(Integer.parseInt(trimmed));
                 } catch (NumberFormatException e) {
-                    // ignore invalid numbers
+                    // ignore invalid inputs
                 }
             }
         }

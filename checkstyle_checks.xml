@@ -16,12 +16,9 @@
   <module name="BeforeExecutionExclusionFileFilter">
     <property name="fileNamePattern" value="module\-info\.java$"/>
   </module>
-  <!-- Exclude generated proto/gRPC files -->
+  <!-- Exclude generated proto/gRPC files from checkstyle -->
   <module name="BeforeExecutionExclusionFileFilter">
-    <property name="fileNamePattern" value=".*[/\\]build[/\\]generated[/\\].*\.java$"/>
-  </module>
-  <module name="BeforeExecutionExclusionFileFilter">
-    <property name="fileNamePattern" value=".*[/\\]build[/\\]generated[/\\]source[/\\]proto[/\\].*\.java$"/>
+    <property name="fileNamePattern" value=".*[/\\]generated[/\\].*\.java$"/>
   </module>
   <module name="BeforeExecutionExclusionFileFilter">
     <property name="fileNamePattern" value=".*Grpc\.java$"/>
