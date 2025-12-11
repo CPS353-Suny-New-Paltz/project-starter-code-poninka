@@ -14,11 +14,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
- // Sequential = single-thread
- // Concurrent = uses a thread pool with an upper bound (set to 8 in UserComputeAPIMultiThreaded)
+// Sequential = single-thread
+// Concurrent = uses a thread pool with an upper bound (set to 8 in UserComputeAPIMultiThreaded)
 final class SubmissionExecutor {
 
-    private SubmissionExecutor() {}
+    private SubmissionExecutor() {
+    }
 
     // Sequential returns result string and now null on failure
     static String executeSequential(DataStoreComputeAPI dataStore, ComputeControllerAPI computeEngine,
@@ -46,8 +47,9 @@ final class SubmissionExecutor {
         }
     }
 
-     // Concurrent fixed thread pool defined by maxThreads
-    static boolean executeConcurrent(DataStoreComputeAPI dataStore, ComputeControllerAPI computeEngine, UserSubmission submission, int maxThreads) {
+    // Concurrent fixed thread pool defined by maxThreads
+    static boolean executeConcurrent(DataStoreComputeAPI dataStore, ComputeControllerAPI computeEngine,
+            UserSubmission submission, int maxThreads) {
 
         ExecutorService pool = null;
 
@@ -122,8 +124,8 @@ final class SubmissionExecutor {
             // Parse directly
             intInputs = parseInput(inputPath);
         } else {
-            // Load list and ignore delimiter for input parsing
-            intInputs = dataStore.loadInput(inputPath, ",");
+            // Load list using flexible delimiter for input parsing
+            intInputs = dataStore.loadInput(inputPath, "[,;\\s]+");
         }
         if (intInputs == null || intInputs.isEmpty()) {
             return null;
@@ -163,7 +165,8 @@ final class SubmissionExecutor {
         return "ERROR"; // will look something like: "5,ERROR,27"
     }
 
-    private static boolean saveResults(DataStoreComputeAPI dataStore, String outputPath, List<String> results, String delimiter) {
+    private static boolean saveResults(DataStoreComputeAPI dataStore, String outputPath, List<String> results,
+            String delimiter) {
         String outputString = String.join(delimiter, results);
         // Save output
         StorageResponse saved = dataStore.saveOutput(outputPath, outputString);

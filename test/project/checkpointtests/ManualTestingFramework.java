@@ -25,8 +25,7 @@ public class ManualTestingFramework {
         UserSubmission submission = new UserSubmission(
                 new InputSource("file", INPUT),
                 new OutputSource(OUTPUT),
-                new Delimiter('\n')
-        );
+                new Delimiter(','));
 
         networkAPI.submit(submission);
     }
