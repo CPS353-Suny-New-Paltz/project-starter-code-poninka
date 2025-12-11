@@ -123,8 +123,8 @@ final class SubmissionExecutor {
             intInputs = parseInput(inputPath);
         } else {
             // Load list from the file
-            // We ignore the user delimiter for input parsing as per requirements
-            intInputs = dataStore.loadInput(inputPath, ",");
+            // flexible delimite
+            intInputs = dataStore.loadInput(inputPath, "[,;\\s]+");
         }
         if (intInputs == null || intInputs.isEmpty()) {
             return null;
