@@ -39,11 +39,10 @@ public class UserComputeAPIImplementation implements UserComputeAPI {
             }
             if (noOpMode) {
                 //report success without requiring files
-                return new UserSubResponse("sub-1", SubmissionStatus.SUCCESS, "noOp");
+                return new UserSubResponse("sub-1", SubmissionStatus.SUCCESS);
             }
-            String result = execute(submission);
-            boolean ok = result != null;
-            return new UserSubResponse(ok ? "sub-1" : null, ok ? SubmissionStatus.SUCCESS : SubmissionStatus.FAILURE_SYSTEM_ERROR, result);
+            boolean ok = execute(submission);
+            return new UserSubResponse(ok ? "sub-1" : null, ok ? SubmissionStatus.SUCCESS : SubmissionStatus.FAILURE_SYSTEM_ERROR);
         } catch (Exception e) {
             return new UserSubResponse(null, SubmissionStatus.FAILURE_SYSTEM_ERROR);
         }
