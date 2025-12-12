@@ -29,3 +29,9 @@ Sequential improvement: 97.57%.
 Multithreaded improvement: 90.53%.
 
 Used [test/project/networkapi/UserComputeSpeedIT.java](test/project/networkapi/UserComputeSpeedIT.java) to determine results.
+
+## Android App
+
+A companion Android app using gRPC to connect to the Power Digit Sum server.
+
+![App Screenshot](assets/appworking.jpg)
